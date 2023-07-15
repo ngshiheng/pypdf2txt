@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pypdf2txt"
+version = "0.1.0"
+description = "BYO PDF to text extractor"
+authors = ["Jerry Ng <ngshiheng@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pywebio = "^1.8.2"
+pdfminer-six = "^20221105"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.2"
+ruff = "^0.0.278"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

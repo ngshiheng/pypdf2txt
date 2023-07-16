@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from pdfminer.high_level import extract_text_to_fp
-from pywebio import config, start_server
+from pywebio import config, session, start_server
 from pywebio.input import file_upload
 from pywebio.output import clear, put_buttons, put_code, put_markdown, toast, use_scope
 from pywebio.session import download, run_js
@@ -102,6 +102,10 @@ def render_description():
 
 
 def main():
+    session.run_js(
+        'WebIO._state.CurrentSession.on_session_close(()=>{setTimeout(()=>location.reload(), 4000})'
+    )
+
     render_description()
     process_pdf()
 

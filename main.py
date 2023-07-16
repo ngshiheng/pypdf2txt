@@ -87,7 +87,7 @@ def process_pdf() -> None:
                     partial(
                         click_to_download,
                         filename=text_filename,
-                        text=text_output.encode()
+                        text=text_output.encode(),
                     ),
                 ],
             )
@@ -98,13 +98,13 @@ def render_description():
         """
         # Pypdf2
 
-        A simple Python web service that allows you to convert your PDF documents to text. This provides a user-friendly and efficient way to extract text from PDF files without compromising privacy, data security, and ownership.
+        A simple Python web service that allows you to convert your PDF documents to text.
+        Extract text from PDF files without compromising privacy, security, and ownership.
 
         ## Features
 
         -   Converts PDF documents to text
         -   Simple and easy-to-use web interface
-        -   Supports processing multiple PDF files simultaneously
         -   Fast and efficient text extraction
         """,
     )
@@ -112,7 +112,7 @@ def render_description():
 
 def main():
     session.run_js(
-        'WebIO._state.CurrentSession.on_session_close(()=>{setTimeout(()=>location.reload(), 4000})'
+        'WebIO._state.CurrentSession.on_session_close(()=>{setTimeout(()=>location.reload(), 4000})',
     )
 
     render_description()

@@ -6,7 +6,6 @@ A simple Python web service that allows you to convert your PDF documents to tex
 
 -   Converts PDF documents to text
 -   Simple and easy-to-use web interface
--   Supports processing multiple PDF files simultaneously
 -   Fast and efficient text extraction
 
 ## Usage

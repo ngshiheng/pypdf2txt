@@ -8,7 +8,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 pdfminer-six = "^20221105"
-python = "^3.11"
+python = "^3.10"
 pywebio = "^1.8.2"
 
 [tool.poetry.group.dev.dependencies]

@@ -1,3 +1,5 @@
+__version__ = "1.0.0"
+
 from functools import partial
 from io import BytesIO, StringIO
 from pathlib import Path

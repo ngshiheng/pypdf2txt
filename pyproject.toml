@@ -30,5 +30,6 @@ build_command = "pip install poetry && poetry build"
 upload_to_pypi = false
 upload_to_release = true
 version_variable = [
+  "main.py:__version__",
   "pyproject.toml:version",
 ]

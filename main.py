@@ -19,7 +19,15 @@ def extract_text_from_pdf(pdf_file: dict[str, Any]) -> str:
     return text_buffer.getvalue()
 
 
-def copy_text_to_clipboard(code: str) -> None:
+def click_to_download(filename: str, text: bytes) -> None:
+    download(
+        filename,
+        text,
+    )
+    toast('Text file downloaded')
+
+
+def copy_to_clipboard(text: str) -> None:
     clipboard_setup = """
     window.writeText = function(text) {
         const input = document.createElement('textarea');
@@ -37,8 +45,8 @@ def copy_text_to_clipboard(code: str) -> None:
     }
     """
     run_js(clipboard_setup)
-    run_js("writeText(text)", text=code)
-    toast('The text has been copied to the clipboard')
+    run_js("writeText(text)", text=text)
+    toast('Text copied to the clipboard')
 
 
 def process_pdf() -> None:
@@ -59,7 +67,7 @@ def process_pdf() -> None:
         clear('text-output-area')
 
         text_output = extract_text_from_pdf(pdf_file)
-        download_text_filename = f"{Path(pdf_file['filename']).stem}.txt"
+        text_filename = f"{Path(pdf_file['filename']).stem}.txt"
 
         with use_scope('text-output-area'):
             put_markdown(
@@ -75,10 +83,11 @@ def process_pdf() -> None:
                     'Click to Download',
                 ],
                 onclick=[
-                    partial(copy_text_to_clipboard, code=text_output),
-                    lambda: download(
-                        download_text_filename,
-                        text_output.encode(),
+                    partial(copy_to_clipboard, text=text_output),
+                    partial(
+                        click_to_download,
+                        filename=text_filename,
+                        text=text_output.encode()
                     ),
                 ],
             )

@@ -1,9 +1,43 @@
+from functools import partial
 from io import BytesIO, StringIO
+from pathlib import Path
 
 from pdfminer.high_level import extract_text_to_fp
-from pywebio import start_server
+from pywebio import config, start_server
 from pywebio.input import file_upload
-from pywebio.output import put_code, put_markdown
+from pywebio.output import (
+    clear,
+    put_buttons,
+    put_code,
+    put_markdown,
+    toast,
+    use_scope,
+)
+from pywebio.session import download, run_js
+
+config(title="Pypdf2txt")
+
+
+def copy_to_clipboard(code):
+    CLIPBOARD_SETUP = """
+    window.writeText = function(text) {
+        const input = document.createElement('textarea');
+        input.style.opacity  = 0;
+        input.style.position = 'absolute';
+        input.style.left = '-100000px';
+        document.body.appendChild(input);
+
+        input.value = text;
+        input.select();
+        input.setSelectionRange(0, text.length);
+        document.execCommand('copy');
+        document.body.removeChild(input);
+        return true;
+    }
+    """
+    run_js(CLIPBOARD_SETUP)
+    run_js("writeText(text)", text=code)
+    toast('The text has been copied to the clipboard')
 
 
 def render_description():
@@ -19,7 +53,7 @@ def render_description():
         -   Simple and easy-to-use web interface
         -   Supports processing multiple PDF files simultaneously
         -   Fast and efficient text extraction
-        """
+        """,
     )
 
 
@@ -27,21 +61,49 @@ def render_file_upload():
     put_markdown(
         """
         ## Convert PDF To Text
-        """
+        """,
     )
 
-    pdf_file = file_upload(
-        "Select PDF",
-        accept="application/pdf",
-        max_size="10M",
-        multiple=False,
-        help_text="example.pdf",
-    )
-    pdf_buffer = BytesIO(pdf_file['content'])
-    output_text = StringIO()
+    while True:
+        pdf_file = file_upload(
+            "Select PDF",
+            accept="application/pdf",
+            max_size="10M",
+            multiple=False,
+            help_text="example.pdf",
+        )
 
-    extract_text_to_fp(pdf_buffer, output_text)
-    put_code(output_text.getvalue())
+        clear('text-output-area')
+
+        pdf_buffer = BytesIO(pdf_file['content'])
+        text_buffer = StringIO()
+
+        extract_text_to_fp(pdf_buffer, text_buffer)
+
+        output_str = text_buffer.getvalue()
+        download_text_filename = f"{Path(pdf_file['filename']).stem}.txt"
+
+        with use_scope('text-output-area'):
+            put_markdown(
+                """
+                ### Text Output
+                """,
+            )
+
+            put_code(output_str)
+            put_buttons(
+                [
+                    "Copy to Clipboard",
+                    'Click to Download',
+                ],
+                onclick=[
+                    partial(copy_to_clipboard, code=output_str),
+                    lambda: download(
+                        download_text_filename,
+                        output_str.encode(),
+                    ),
+                ],
+            )
 
 
 def main():

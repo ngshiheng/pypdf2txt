@@ -1,25 +1,26 @@
 from functools import partial
 from io import BytesIO, StringIO
 from pathlib import Path
+from typing import Any
 
 from pdfminer.high_level import extract_text_to_fp
 from pywebio import config, start_server
 from pywebio.input import file_upload
-from pywebio.output import (
-    clear,
-    put_buttons,
-    put_code,
-    put_markdown,
-    toast,
-    use_scope,
-)
+from pywebio.output import clear, put_buttons, put_code, put_markdown, toast, use_scope
 from pywebio.session import download, run_js
 
-config(title="Pypdf2txt")
+config(title="Pypdf2")
 
 
-def copy_to_clipboard(code):
-    CLIPBOARD_SETUP = """
+def extract_text_from_pdf(pdf_file: dict[str, Any]) -> str:
+    pdf_buffer = BytesIO(pdf_file['content'])
+    text_buffer = StringIO()
+    extract_text_to_fp(pdf_buffer, text_buffer)
+    return text_buffer.getvalue()
+
+
+def copy_text_to_clipboard(code: str) -> None:
+    clipboard_setup = """
     window.writeText = function(text) {
         const input = document.createElement('textarea');
         input.style.opacity  = 0;
@@ -35,15 +36,58 @@ def copy_to_clipboard(code):
         return true;
     }
     """
-    run_js(CLIPBOARD_SETUP)
+    run_js(clipboard_setup)
     run_js("writeText(text)", text=code)
     toast('The text has been copied to the clipboard')
+
+
+def process_pdf() -> None:
+    put_markdown(
+        """
+        ## Convert PDF To Text
+        """,
+    )
+
+    while True:
+        pdf_file = file_upload(
+            "Select PDF",
+            accept="application/pdf",
+            max_size="10M",
+            multiple=False,
+            help_text="sample.pdf",
+        )
+        clear('text-output-area')
+
+        text_output = extract_text_from_pdf(pdf_file)
+        download_text_filename = f"{Path(pdf_file['filename']).stem}.txt"
+
+        with use_scope('text-output-area'):
+            put_markdown(
+                """
+                ### Text Output
+                """,
+            )
+
+            put_code(text_output, rows=10)
+            put_buttons(
+                [
+                    "Copy to Clipboard",
+                    'Click to Download',
+                ],
+                onclick=[
+                    partial(copy_text_to_clipboard, code=text_output),
+                    lambda: download(
+                        download_text_filename,
+                        text_output.encode(),
+                    ),
+                ],
+            )
 
 
 def render_description():
     put_markdown(
         """
-        # Pypdf2txt
+        # Pypdf2
 
         A simple Python web service that allows you to convert your PDF documents to text. This provides a user-friendly and efficient way to extract text from PDF files without compromising privacy, data security, and ownership.
 
@@ -57,58 +101,9 @@ def render_description():
     )
 
 
-def render_file_upload():
-    put_markdown(
-        """
-        ## Convert PDF To Text
-        """,
-    )
-
-    while True:
-        pdf_file = file_upload(
-            "Select PDF",
-            accept="application/pdf",
-            max_size="10M",
-            multiple=False,
-            help_text="example.pdf",
-        )
-
-        clear('text-output-area')
-
-        pdf_buffer = BytesIO(pdf_file['content'])
-        text_buffer = StringIO()
-
-        extract_text_to_fp(pdf_buffer, text_buffer)
-
-        output_str = text_buffer.getvalue()
-        download_text_filename = f"{Path(pdf_file['filename']).stem}.txt"
-
-        with use_scope('text-output-area'):
-            put_markdown(
-                """
-                ### Text Output
-                """,
-            )
-
-            put_code(output_str)
-            put_buttons(
-                [
-                    "Copy to Clipboard",
-                    'Click to Download',
-                ],
-                onclick=[
-                    partial(copy_to_clipboard, code=output_str),
-                    lambda: download(
-                        download_text_filename,
-                        output_str.encode(),
-                    ),
-                ],
-            )
-
-
 def main():
     render_description()
-    render_file_upload()
+    process_pdf()
 
 
 if __name__ == "__main__":

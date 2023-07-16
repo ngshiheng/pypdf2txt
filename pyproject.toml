@@ -7,7 +7,7 @@ packages = [
   {include = "main.py"},
 ]
 readme = "README.md"
-version = "1.0.0"
+version = "0.1.0"
 
 [tool.poetry.dependencies]
 pdfminer-six = "^20221105"
@@ -33,6 +33,5 @@ build_command = "pip install poetry && poetry build"
 upload_to_pypi = false
 upload_to_release = true
 version_variable = [
-  "main.py:__version__",
   "pyproject.toml:version",
 ]

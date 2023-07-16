@@ -3,6 +3,9 @@ authors = ["Jerry Ng <ngshiheng@gmail.com>"]
 description = "A simple Python web service that allows you to convert your PDF documents to text."
 license = "MIT"
 name = "pypdf2txt"
+packages = [
+  {include = "main.py"},
+]
 readme = "README.md"
 version = "1.0.0"
 

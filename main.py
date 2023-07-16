@@ -99,7 +99,7 @@ def render_description():
         # Pypdf2
 
         A simple Python web service that allows you to convert your PDF documents to text.
-        Extract text from PDF files without compromising privacy, security, and ownership.
+        Extract text from PDF files without compromising **privacy**, **security**, and **ownership**.
 
         ## Features
 

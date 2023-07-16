@@ -1,6 +1,6 @@
 # Pypdf2txt
 
-A simple Python web service that allows you to convert your PDF documents to text. This provides a user-friendly and efficient way to extract text from PDF files without compromising privacy, data security, and ownership.
+A simple Python web service that allows you to convert your PDF documents to text. Extract text from PDF files without compromising **privacy**, **security**, and **ownership**.
 
 ## Features
 
@@ -13,6 +13,7 @@ A simple Python web service that allows you to convert your PDF documents to tex
 1. Start the web service by running the following command:
 
     ```sh
+    # make run
     poetry run python3 main.py
     ```
 

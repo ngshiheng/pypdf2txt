@@ -4,7 +4,7 @@ description = "A simple Python web service that allows you to convert your PDF d
 license = "MIT"
 name = "pypdf2txt"
 readme = "README.md"
-version = "0.1.0"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 pdfminer-six = "^20221105"
@@ -14,6 +14,7 @@ pywebio = "^1.8.2"
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.0.2"
 pre-commit = "^3.3.3"
+python-semantic-release = "^8.0.0"
 ruff = "^0.0.278"
 
 [build-system]
@@ -22,3 +23,12 @@ requires = ["poetry-core"]
 
 [tool.ruff]
 line-length = 180
+
+[tool.semantic_release]
+branch = "main"
+build_command = "pip install poetry && poetry build"
+upload_to_pypi = false
+upload_to_release = true
+version_variable = [
+  "pyproject.toml:version",
+]

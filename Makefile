@@ -4,6 +4,7 @@ POETRY := $(shell command -v poetry 2> /dev/null)
 PYTHON := $(shell command -v python3 2> /dev/null)
 DOCKER := $(shell command -v docker 2> /dev/null)
 MAKEFLAGS += --no-print-directory
+ENVIRONMENT ?= development
 
 .DEFAULT_GOAL := help
 ##@ Helper
@@ -27,3 +28,14 @@ lint:	## run the code linters with pre-commit.
 .PHONY: run
 run:	## run server
 	@$(POETRY) run python3 main.py
+
+
+##@ Docker
+PHONY: build-docker
+build-docker:	## build docker image.
+	$(DOCKER) build -t $(NAME) . --build-arg ENVIRONMENT=$(ENVIRONMENT) -f docker/Dockerfile
+
+.PHONY: run-docker
+run-docker:	## run local development server in docker.
+	@$(DOCKER) stop $(NAME) || true && $(DOCKER) rm $(NAME) || true
+	$(DOCKER) run -d -p 8080:8080 --name $(NAME) $(NAME)

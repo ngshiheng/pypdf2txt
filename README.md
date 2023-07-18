@@ -2,6 +2,13 @@
 
 A simple Python web service that allows you to convert your PDF documents to text. Extract text from PDF files without compromising **privacy**, **security**, and **ownership**.
 
+<img
+  src="./docs/images/demo.gif"
+  alt="Demo image"
+  width=auto
+  height=auto
+/>
+
 ## Features
 
 -   Converts PDF documents to text

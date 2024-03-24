@@ -17,7 +17,7 @@ pywebio = "1.8.2"
 [tool.poetry.group.dev.dependencies]
 autopep8 = "2.0.2"
 pre-commit = "3.3.3"
-python-semantic-release = "8.0.0"
+python-semantic-release = "9.3.1"
 ruff = "0.0.278"
 
 [build-system]

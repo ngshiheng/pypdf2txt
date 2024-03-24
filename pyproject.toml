@@ -11,14 +11,14 @@ version = "0.1.0"
 
 [tool.poetry.dependencies]
 pdfminer-six = "20221105"
-python = "3.12.0"
-pywebio = "1.8.2"
+python = "3.12.2"
+pywebio = "1.8.3"
 
 [tool.poetry.group.dev.dependencies]
-autopep8 = "2.0.2"
-pre-commit = "3.3.3"
-python-semantic-release = "8.0.0"
-ruff = "0.0.278"
+autopep8 = "2.1.0"
+pre-commit = "3.7.0"
+python-semantic-release = "8.7.0"
+ruff = "0.3.4"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
